@@ -1,4 +1,5 @@
 # 将配置信息封装到config类中
+import logging
 from datetime import timedelta
 
 from redis import Redis
@@ -20,10 +21,11 @@ class Config:
 # 开发环境,项目开发阶段需要的代码环境
 class DevelopmentConfig(Config):
     DEBUG = True
-
+    LOG_LEVEL = logging.DEBUG
 # 生产环境,项目上线后需要的代码环境(用户可以外网访问)
 class ProductionConfig(Config):
     DEBUG = False
+    LOG_LIVEL = logging.ERROR
 
 config_dict = {
     "dev":DevelopmentConfig,
