@@ -1,3 +1,5 @@
+from flask import render_template
+
 from info.modules.home import home_blu
 from info import redis,db
 import logging # python 内置的日志模块,日志既可以在控制台输出,也可以保存到文件中
@@ -6,5 +8,6 @@ import logging # python 内置的日志模块,日志既可以在控制台输出,
 # 使用蓝图对象注册路由
 @home_blu.route('/')
 def index():
+    # 新闻网站需要SEO,主要采用后端渲染来完成模板替换
 
-    return "index"
+    return render_template("index.html")
