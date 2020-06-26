@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template,current_app
 
 from info.modules.home import home_blu
 from info import redis,db
@@ -11,3 +11,16 @@ def index():
     # 新闻网站需要SEO,主要采用后端渲染来完成模板替换
 
     return render_template("index.html")
+
+
+@home_blu.route("/favicon.ico")
+def favico():
+    """浏览器会自动向网站发起/favicon.ico请求来获取网站小图标"""
+    # 网站只需实现该路由,并返回图标图片即可 只请求一次
+    # with open的方法不会自动设置响应头,这里使用jsonfy方法不方便
+    # with open("info/static/news/favicon.ico","rb") as f:
+    #     content = f.read()
+
+    # flask中提供了一个获取静态文件内容的方法send_static_file(会将内容包装为响应对象,并自动设置对应的content-type)
+    response = current_app.send_static_file("news/favicon.ico")
+    return response
