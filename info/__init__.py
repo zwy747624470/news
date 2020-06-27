@@ -38,7 +38,7 @@ def creat_app(Config):    # 封装web应用的创建过程
     # 创建数据库链接
     db = SQLAlchemy(app)
     # 创建redis链接
-    redis = Redis(host=Config.REDIS_HOST,port=Config.REDIS_PORT)
+    redis = Redis(host=Config.REDIS_HOST,port=Config.REDIS_PORT,decode_responses=True)
     # 初始化session存储器
     Session(app)
 
@@ -48,6 +48,8 @@ def creat_app(Config):    # 封装web应用的创建过程
     # 注册蓝图对象
     from info.modules.home import home_blu
     app.register_blueprint(home_blu)
+    from info.modules.passport import passport_blu
+    app.register_blueprint(passport_blu)
 
     # 让模型文件和主程序建立关联
     from info.utils import models
