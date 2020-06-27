@@ -1,4 +1,4 @@
-from flask import render_template,current_app
+from flask import render_template, current_app, session, jsonify, abort
 
 from info.modules.home import home_blu
 from info import redis,db
@@ -6,11 +6,26 @@ import logging # python 内置的日志模块,日志既可以在控制台输出,
 # flask中默认的日志信息也是使用的logging模块,但是他没有往文件里保存
 
 # 使用蓝图对象注册路由
+from info.utils.models import User
+from info.utils.response_code import RET, error_map
+
+
 @home_blu.route('/')
 def index():
-    # 新闻网站需要SEO,主要采用后端渲染来完成模板替换
+    # 获取session中的user_id
+    user_id = session.get("user_id")
+    user = None
+    if user_id: # 用户已登录
+        # 根据user_id 取出用户数据
+        try:
+            user = User.query.get(user_id)
+        except Exception as e:
+            current_app.logger.error(e)
+            return abort(500)
+    user = user.to_dict() if user else None
 
-    return render_template("index.html")
+    # 新闻网站需要SEO,主要采用后端渲染来完成模板替换
+    return render_template("index.html",user=user)
 
 
 @home_blu.route("/favicon.ico")
