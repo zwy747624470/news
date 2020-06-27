@@ -143,3 +143,29 @@ def register():
 
     # 跳转到首页
     return jsonify(errno=RET.OK,errmsg=error_map[RET.OK])
+
+
+# 用户登录
+@passport_blu.route("/login",methods=["POST"])
+def login():
+    # 获取参数
+    mobile = request.json.get("mobile")
+    password = request.json.get("password")
+    # 校验参数
+    if not all([mobile,password]):
+        return jsonify(errno=RET.PARAMERR,errmsg=error_map[RET.PARAMERR])
+    # 数据库查询用户数据
+    try:
+        user = User.query.filter_by(mobile=mobile).first()
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.PARAMERR,errmsg=error_map[RET.PARAMERR])
+
+    if not user:
+        return jsonify(errno=RET.NODATA,errmsg=error_map[RET.NODATA])
+    # 校验密码
+    if not user.check_passoword(password):
+        return jsonify(errno=RET.PWDERR,errmsg=error_map[RET.PWDERR])
+
+    # 返回结果
+    return jsonify(errno=RET.OK,errmsg=error_map[RET.OK])
