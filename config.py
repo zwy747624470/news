@@ -16,6 +16,7 @@ class Config:
     SESSION_USE_SIGNER = True   # 设置session_id是否加密
     SECRET_KEY = "kNAgBQjBEQJ9Q/wmdO2gp2qfns+VMKX2sNo5ucxbELAkj1Ux10w+Qrupkp0Etw/j" # 设置应用秘钥,对session进行加密
     PERMANENT_SESSION_LIFETIME = timedelta(days=31) # 设置session过期时间
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = True # 设置每次请求结束自动提交 有bug,源代码中只有提交,没有异常捕获和回滚
 
 # 不同的代码需要使用不同的配置信息 (配置子类化)
 # 开发环境,项目开发阶段需要的代码环境

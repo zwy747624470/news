@@ -1,5 +1,6 @@
 import random
 import re
+from datetime import datetime
 
 from flask import request, abort, current_app, make_response, Response, jsonify, session
 
@@ -137,6 +138,7 @@ def register():
         db.session.commit()
     except Exception as e:
         current_app.logger.error(e)
+        db.session.rollback()
         return jsonify(errno=RET.DBERR,errmsg=error_map[RET.DBERR])
     # 使用session记录用户的登录状态
     session["user_id"] = user.id
@@ -166,6 +168,17 @@ def login():
     # 校验密码
     if not user.check_passoword(password):
         return jsonify(errno=RET.PWDERR,errmsg=error_map[RET.PWDERR])
-
+    # 用户状态保持
+    session["user_id"] = user.id
+    # 用户最后登录时间
+    user.last_login = datetime.now() # 记录用户的最后登录时间
+    # 这样也可以实现提交, sqlalchemy提供了一个配置,可以在请求结束后自动提交,但是有bug,没有回滚,这里没有使用
+    db.session.add(user)
+    try:
+        db.session.commit()
+    except Exception as e:
+        current_app.logger.error(e)
+        db.session.rollback()
+        return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])
     # 返回结果
     return jsonify(errno=RET.OK,errmsg=error_map[RET.OK])
