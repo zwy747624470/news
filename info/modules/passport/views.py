@@ -1,7 +1,7 @@
 import random
 import re
 
-from flask import request, abort, current_app, make_response, Response, jsonify
+from flask import request, abort, current_app, make_response, Response, jsonify, session
 
 from info import redis, db
 from info.libs.captcha.pic_captcha import captcha
@@ -68,6 +68,15 @@ def get_sms_code():
         # 验证码不正确
         return jsonify(errno=RET.PARAMERR,errmsg=error_map[RET.PARAMERR])
 
+    # 发送短信之前判断用户是否存在
+    try:
+        user = User.query.filter_by(mobile=mobile).first()
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.DBERR,errmsg=error_map[RET.DBERR])
+
+    if user:
+        return jsonify(errno=RET.DATAEXIST,errmsg=error_map[RET.DATAEXIST])
     # 生成一个随机的短信验证码
     sms_num = "%04d" % random.randint(0,9999)
     # ***************************************************************************************
@@ -118,7 +127,10 @@ def register():
     # 数据库记录手机号密码
     user = User()
     user.mobile = mobile
-    user.password_hash = password
+    # 使用计算型属性,封装加密过程
+    user.password = password
+
+
     user.nick_name = mobile
     db.session.add(user)
     try:
@@ -126,6 +138,8 @@ def register():
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR,errmsg=error_map[RET.DBERR])
+    # 使用session记录用户的登录状态
+    session["user_id"] = user.id
 
     # 跳转到首页
     return jsonify(errno=RET.OK,errmsg=error_map[RET.OK])
