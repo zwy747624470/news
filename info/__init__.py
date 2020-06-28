@@ -25,7 +25,7 @@ def setup_log(log_level):
     file_log_handler.setFormatter(formatter)
     # 为全局的日志工具对象（flask app使用的）添加日志记录器
     logging.getLogger().addHandler(file_log_handler)
-    pass
+
 
 # 工厂函数: 由外界提供我们的物料,在函数内部封装我们对象的创建
 def creat_app(Config):    # 封装web应用的创建过程
@@ -56,5 +56,9 @@ def creat_app(Config):    # 封装web应用的创建过程
 
     # 设置日志
     setup_log(Config.LOG_LEVEL)
+
+    from info.utils.common import func_index_convert
+    # 添加自定义过滤器
+    app.add_template_filter(func_index_convert,"index_convert")
 
     return app
