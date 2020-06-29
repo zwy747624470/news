@@ -95,7 +95,7 @@ def get_news_list():
     # 返回数据
     data = {
         "news_list": [news.to_dict() for news in pn.items],
-        "total": pn.pages
+        "total_page": pn.pages
     }
 
     return jsonify(errno=RET.OK, errmsg=error_map[RET.OK],data=data)
