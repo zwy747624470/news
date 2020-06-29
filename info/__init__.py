@@ -50,6 +50,8 @@ def creat_app(Config):    # 封装web应用的创建过程
     app.register_blueprint(home_blu)
     from info.modules.passport import passport_blu
     app.register_blueprint(passport_blu)
+    from info.modules.news import news_blu
+    app.register_blueprint(news_blu)
 
     # 让模型文件和主程序建立关联
     from info.utils import models
