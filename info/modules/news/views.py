@@ -7,6 +7,7 @@ from info.utils.response_code import RET, error_map
 
 
 @news_blu.route("/<int:news_id>")
+@user_login_data
 def news_detail(news_id):
     #　从数据库查询对应的新闻数据
     try:
@@ -16,7 +17,7 @@ def news_detail(news_id):
         return jsonify(errno=RET.DBERR,errmsg=error_map[RET.DBERR])
         # return abort(500)
 
-    user_login_data()
+    # user_login_data()
     user = g.user.to_dict() if g.user else None
     # 查询点击量排行前十的新闻
     try:

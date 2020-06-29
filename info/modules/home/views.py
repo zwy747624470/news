@@ -13,8 +13,21 @@ from info.utils.response_code import RET, error_map
 
 
 @home_blu.route('/')
+@user_login_data
 def index():
-    user_login_data()
+    # 获取session中的user_id
+    # user_id = session.get("user_id")
+    # user = None
+    # if user_id:  # 用户已登录
+    #     # 根据user_id 取出用户数据
+    #     try:
+    #         user = User.query.get(user_id)
+    #     except Exception as e:
+    #         current_app.logger.error(e)
+    #         return abort(500)
+    #
+    # user = user.to_dict() if user else None
+
     user = g.user.to_dict() if g.user else None
 
     # 查询点击量排行前十的新闻
