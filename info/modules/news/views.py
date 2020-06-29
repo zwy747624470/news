@@ -18,8 +18,16 @@ def news_detail(news_id):
         return jsonify(errno=RET.DBERR,errmsg=error_map[RET.DBERR])
         # return abort(500)
 
-    # user_login_data()
-    user = g.user.to_dict() if g.user else None
+    user = g.user
+
+    # 查询当前新闻是否被用户收藏
+    is_collected = False
+    if user: # 用户已登录
+        if news in user.collection_news:
+            is_collected = True
+
+    user = user.to_dict() if user else None
+
     # 查询点击量排行前十的新闻
     try:
         rank_list = News.query.order_by(News.clicks.desc()).limit(10).all()
@@ -27,7 +35,7 @@ def news_detail(news_id):
         current_app.logger.error(e)
         rank_list = []
     # 将数据传入模版进行渲染
-    return render_template("detail.html",news=news.to_dict(),user=user,rank_list=rank_list)
+    return render_template("detail.html",news=news.to_dict(),user=user,rank_list=rank_list,is_collected=is_collected)
 
 @news_blu.route("/news_collect",methods=["POST"])
 @user_login_data
