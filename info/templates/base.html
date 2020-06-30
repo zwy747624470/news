@@ -24,7 +24,7 @@
         {% if user %} {# 已登录 #}
             <div class="user_login fr">
                 <img {% if not user.avatar_url %} src="../static/news/images/person01.png" {% else %}src="{{ user.avatar_url }}" {% endif %}class="lgin_pic">
-                <a href="#" id="nick_name">{{ user.nick_name }}</a>
+                <a href="{{ url_for("user.user_info") }}" id="nick_name">{{ user.nick_name }}</a>
                 <a href="javascript:;" onclick="logout()">退出</a>
             </div>
         {% else %} {# 未登录 #}
