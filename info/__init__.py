@@ -54,7 +54,7 @@ def creat_app(Config):    # 封装web应用的创建过程
     app.register_blueprint(news_blu)
     from info.modules.user import user_blu
     app.register_blueprint(user_blu)
-    from info.modules.user import admin_blu
+    from info.modules.admin import admin_blu
     app.register_blueprint(admin_blu)
     # 让模型文件和主程序建立关联
     from info.utils import models
@@ -76,7 +76,7 @@ def creat_app(Config):    # 封装web应用的创建过程
 
         # 渲染404页面
 
-        return render_template("404.html",user=user)
+        return render_template("news/404.html", user=user)
 
 
     return app

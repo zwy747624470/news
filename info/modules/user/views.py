@@ -18,7 +18,7 @@ def user_info():
     if not user:
         return abort(403)
 
-    return render_template("user.html",user=user.to_dict())
+    return render_template("news/user.html", user=user.to_dict())
 
 # 显示基本资料
 @user_blu.route("/base_info",methods=["GET","POST"])
@@ -29,7 +29,7 @@ def base_info():
     if not user:
         return abort(403)
     if request.method == "GET":
-        return render_template("user_base_info.html", user=user.to_dict())
+        return render_template("news/user_base_info.html", user=user.to_dict())
 
     # POST提交数据
     # 获取参数
@@ -69,7 +69,7 @@ def pic_info():
     if not user:
         return abort(403)
     if request.method == "GET":
-        return render_template("user_pic_info.html", user=user.to_dict())
+        return render_template("news/user_pic_info.html", user=user.to_dict())
 
     # POST提交数据
     # 获取参数
@@ -112,7 +112,7 @@ def pass_info():
     if not user:
         return abort(403)
     if request.method == "GET":
-        return render_template("user_pic_info.html", user=user.to_dict())
+        return render_template("news/user_pic_info.html", user=user.to_dict())
 
     # 获取参数
     old_password = request.json.get("old_password")
@@ -171,7 +171,7 @@ def collection():
         "total_page": pn.pages
     }
 
-    return render_template("user_collection.html",data=data)
+    return render_template("news/user_collection.html", data=data)
 
 # 显示新闻发布页面和提交新闻数据
 @user_blu.route("/news_release",methods=["GET","POST"])
@@ -189,7 +189,7 @@ def news_release():
         except Exception as e:
             current_app.logger.error(e)
             return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])
-        return render_template("user_news_release.html", categories=categories)
+        return render_template("news/user_news_release.html", categories=categories)
 
     # POST提交数据
     # 获取参数
@@ -278,7 +278,7 @@ def news_list():
         "total_page": pn.pages
     }
 
-    return render_template("user_news_list.html",data=data)
+    return render_template("news/user_news_list.html", data=data)
 
 # 显示用户关注的所有作者
 @user_blu.route("/user_follow")
@@ -313,4 +313,4 @@ def user_follow():
         "total_page": pn.pages
     }
 
-    return render_template("user_follow.html",data=data)
+    return render_template("news/user_follow.html", data=data)

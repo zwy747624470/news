@@ -45,7 +45,7 @@ def index():
         return abort(500)
 
     # 新闻网站需要SEO,主要采用后端渲染来完成模板替换
-    return render_template("index.html",user=user,rank_list=rank_list,categories=categories)
+    return render_template("news/index.html", user=user, rank_list=rank_list, categories=categories)
 
 
 @home_blu.route("/favicon.ico")

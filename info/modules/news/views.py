@@ -61,7 +61,7 @@ def news_detail(news_id):
 
     user = user.to_dict() if user else None
     # 将数据传入模版进行渲染
-    return render_template("detail.html",news=news.to_dict(),user=user,rank_list=rank_list,is_collected=is_collected,comment_list=comments,is_followed=is_followed)
+    return render_template("news/detail.html", news=news.to_dict(), user=user, rank_list=rank_list, is_collected=is_collected, comment_list=comments, is_followed=is_followed)
 
 # 新闻收藏
 @news_blu.route("/news_collect",methods=["POST"])
