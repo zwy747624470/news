@@ -85,9 +85,9 @@ def get_news_list():
     try:
 
         if cid != 1:
-            pn = News.query.filter(News.category_id==cid).order_by(News.create_time.desc()).paginate(cur_page,per_count)
+            pn = News.query.filter(News.category_id==cid,News.status==0).order_by(News.create_time.desc()).paginate(cur_page,per_count)
         else:
-            pn = News.query.order_by(News.create_time.desc()).paginate(cur_page,per_count)
+            pn = News.query.filter(News.status==0).order_by(News.create_time.desc()).paginate(cur_page,per_count)
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])

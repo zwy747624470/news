@@ -302,6 +302,8 @@ function generateUUID() {
 // 退出登录
 function logout() {
     $.get('/passport/logout', function (resp) {
-        location.reload()
+        // location.reload()
+        // 重定向到首页
+        window.location.href = "/"
     })
 }

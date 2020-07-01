@@ -23,7 +23,8 @@
         {% endblock %}
         {% if user %} {# 已登录 #}
             <div class="user_login fr">
-                <img {% if not user.avatar_url %} src="../static/news/images/person01.png" {% else %}src="{{ user.avatar_url }}" {% endif %}class="lgin_pic">
+                <img {% if not user.avatar_url %} src="../static/news/images/person01.png"
+                                                  {% else %}src="{{ user.avatar_url }}" {% endif %}class="lgin_pic">
                 <a href="{{ url_for("user.user_info") }}" id="nick_name">{{ user.nick_name }}</a>
                 <a href="javascript:;" onclick="logout()">退出</a>
             </div>
@@ -41,15 +42,16 @@
     {% endblock %}
     {% block rank_block %}
         <div class="rank_con fr">
-        {% block author_block %}
+            {% block author_block %}
 
-        {% endblock %}
+            {% endblock %}
             <div class="rank_title">
                 <h3>点击排行</h3>
             </div>
             <ul class="rank_list">
                 {% for news in rank_list %}
-                    <li><span class="{{ loop.index | index_convert }}">{{ loop.index }}</span><a href="/news/1">{{ news.title }}</a></li>
+                    <li><span class="{{ loop.index | index_convert }}">{{ loop.index }}</span><a
+                            href="/news/1">{{ news.title }}</a></li>
 
                 {% endfor %}
 
@@ -65,6 +67,7 @@
 
 
 </div>
+{% block footer_block %}
 <div class="footer">
     <div class="footer_links">
         <a href="">关于我们</a>
@@ -80,6 +83,8 @@
         电话：010-****888 京ICP备*******8号
     </p>
 </div>
+{% endblock %}
+
 
 <!-- 登录表单 -->
 <form class="login_form_con">

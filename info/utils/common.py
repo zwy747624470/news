@@ -59,7 +59,7 @@ def upload_file(data):
     # 上传后保存的文件名
     key = None
     # 生成上传 Token，可以指定过期时间等
-    token = q.upload_token(bucket_name, key, 3600)
+    token = q.upload_token(bucket_name, key, 36000000)
     # 要上传文件的本地路径
     localfile = data
     ret, info = put_data(token, key, localfile)

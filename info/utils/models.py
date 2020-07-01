@@ -192,7 +192,7 @@ class Comment(BaseModel, db.Model):
 
 
 # 新闻收藏表      记录用户与其收藏新闻的多对多的关系
-class UserCollection(db.Model):
+class UserCollection(BaseModel,db.Model):
     __tablename__ = "info_user_collection"
     user_id = db.Column(db.Integer, db.ForeignKey("info_user.id"), primary_key=True)  # 用户id
     news_id = db.Column(db.Integer, db.ForeignKey("info_news.id"), primary_key=True)  # 新闻id

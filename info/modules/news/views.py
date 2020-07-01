@@ -26,6 +26,12 @@ def news_detail(news_id):
         if news in user.collection_news:
             is_collected = True
 
+    # 查询当前新闻作者是否被用户关注
+    is_followed = False
+    if user and news.user: #　用户已登录 且新闻有作者
+        if news.user in user.followed:
+            is_followed = True
+
 
     # 查询当前新闻的所有评论
     try:
@@ -55,7 +61,7 @@ def news_detail(news_id):
 
     user = user.to_dict() if user else None
     # 将数据传入模版进行渲染
-    return render_template("detail.html",news=news.to_dict(),user=user,rank_list=rank_list,is_collected=is_collected,comment_list=comments)
+    return render_template("detail.html",news=news.to_dict(),user=user,rank_list=rank_list,is_collected=is_collected,comment_list=comments,is_followed=is_followed)
 
 # 新闻收藏
 @news_blu.route("/news_collect",methods=["POST"])
@@ -204,3 +210,50 @@ def comment_like():
         return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])
     # 返回数据
     return jsonify(errno=RET.OK, errmsg=error_map[RET.OK])
+
+@news_blu.route("/followed_user",methods=["POST"])
+@user_login_data
+def followed_user():
+
+    # 判断用户是否登录
+    user = g.user
+    if not user:
+        return jsonify(errno=RET.SESSIONERR,errmsg=error_map[RET.SESSIONERR])
+
+    # 获取参数
+    user_id = request.json.get("user_id")
+    action = request.json.get("action")
+
+    # 校验参数
+    if not all([user_id,action]):
+        return jsonify(errno=RET.PARAMERR,errmsg=error_map[RET.PARAMERR])
+    try:
+        user_id = int(user_id)
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.PARAMERR,errmsg=error_map[RET.PARAMERR])
+    if action not in ["follow","unfollow"]:
+        return jsonify(errno=RET.PARAMERR, errmsg=error_map[RET.PARAMERR])
+
+    # 数据库记录数据 : 添加和删除关注作者
+    # 获取作者id
+    try:
+        author = User.query.get(user_id)
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.DBERR,errmsg=error_map[RET.DBERR])
+
+    if action == "follow":    # 关注
+        user.followed.append(author)
+    else: # 取消关注
+        user.followed.remove(author)
+    db.session.add(user)
+    try:
+        db.session.commit()
+    except Exception as e:
+        current_app.logger.error(e)
+        db.session.rollback()
+        return jsonify(errno=RET.DBERR,errmsg=error_map[RET.DBERR])
+
+    # json返回结果
+    return jsonify(errno=RET.OK,errmsg=error_map[RET.OK])
